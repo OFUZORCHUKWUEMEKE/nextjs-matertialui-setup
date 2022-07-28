@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import AuthProvider from '../components/AuthProvider'
 
 import {
   ApolloClient,
@@ -17,6 +18,7 @@ import createEmotionCache from '../utility/createEmotionCache';
 import lightTheme from '../styles/theme/lightTheme';
 import '../styles/globals.css';
 import BlogProvider from '../components/BlogContext';
+// import { AuthProvider } from '../../../client/src/AuthProvider';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -25,7 +27,7 @@ const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   // const token = JSON.parse(localStorage.getItem('token'));
   // console.log(token)
-  if (typeof window !== 'undefined'){
+  if (typeof window !== 'undefined') {
     // Perform localStorage action
     const token = JSON.parse(localStorage.getItem('token'));
     // setToken(token)
@@ -37,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
     }
   }
   // return the headers to the context so httpLink can read them
-  
+
 });
 
 const link = createHttpLink({
@@ -56,14 +58,16 @@ const MyApp = (props) => {
 
   return (
     <ApolloProvider client={client}>
-      <CacheProvider value={emotionCache}>
-        <BlogProvider>
-          <ThemeProvider theme={lightTheme}>
-            <CssBaseline />
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </BlogProvider>
-      </CacheProvider>
+      <AuthProvider>
+        <CacheProvider value={emotionCache}>
+          <BlogProvider>
+            <ThemeProvider theme={lightTheme}>
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </BlogProvider>
+        </CacheProvider>
+      </AuthProvider>
     </ApolloProvider>
 
   );
@@ -73,7 +77,7 @@ export default MyApp;
 
 export async function getServerSideProps() {
   // Fetch data from external API
- 
+
   const data = localStorage.getItem('token')
 
   // Pass data to the page via props
@@ -82,7 +86,7 @@ export async function getServerSideProps() {
 
 
 // export const getServerSideProps = ()=>{
- 
+
 // }
 
 MyApp.propTypes = {

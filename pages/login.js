@@ -10,35 +10,37 @@ import { Button } from '@chakra-ui/react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { client } from './_app';
+import { AuthContext } from '../components/AuthProvider';
 
 const Login = ({login}) => {
   const router = useRouter()
-//   const { dispatch } = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext)
   const [values, setValues] = useState({ email: "", password: "" })
   const [user, setUser] = useState()
   const [load, setLoading] = useState(false)
   const [errors,setErrors] = useState('')
-//   const [addUser, { loading, error, data }] = useMutation(LOGINQUERY, {
-//     update(_, { data: { login } }) {
-//       dispatch({ type: "LOGIN", payload: login })
-//       router.push('/')
-//       setUser(login)
-//     },
-//     onError(err) {
-//       console.log(err.graphQLErrors[0].message)
-//       setErrors(err.graphQLErrors[0].message)
-//       toast.error(errors, {
-//         position: "top-right",
-//         autoClose: 5000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//       })
-//     },
-//     variables: values
-//   })
+  const [addUser, { loading, error, data }] = useMutation(LOGINQUERY, {
+    update(_, { data: { login } }) {
+      dispatch({ type: "LOGIN", payload: login })
+      router.push('/')
+      setUser(login)
+    },
+    onError(err) {
+      console.log(err)
+      console.log(err.graphQLErrors[0].message)
+      setErrors(err.graphQLErrors[0].message)
+      toast.error(errors, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    },
+    variables: values
+  })
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value })
@@ -55,7 +57,7 @@ const Login = ({login}) => {
   }
   return (
     <>
-      <div className='bg-[#171d24] min-h-screen'>
+      <div className='bg-[#171d24] min-h-screen'>  
         <Nav />
         <div className='grid w-[90%] mx-auto place-items-center h-[80vh]'>
           <Grid container spacing={3} justifyContent='space-between' alignItems='center'>
@@ -72,7 +74,7 @@ const Login = ({login}) => {
               <ToastContainer
                 position="top-right"
                 autoClose={5000}
-                hideProgressBar={false}
+                hideProgressBar={false}  
                 newestOnTop={false}
                 closeOnClick
                 rtl={false}
@@ -103,37 +105,9 @@ const LOGINQUERY = gql`
        id
        email
        username 
-       token  
-      
+       token
     }
   }
 `
 
 export default Login;
-
-export const getServerSideProps = ()=>{
-  const [login, { loading, error, data }] = client.mutate({
-    mutation: gql`
-    mutation login(
-      $email:String!
-      $password:String!
-    ){
-      login(  
-          email:$email
-          password:$password
-      ){
-         id
-         email
-         username 
-         token  
-        
-      }
-    }
-  `
-  })
-  return{
-    prop:{
-      login:login
-    }
-  }
-}

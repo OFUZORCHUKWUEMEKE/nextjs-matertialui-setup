@@ -10,13 +10,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import TemporaryDrawer from './Drawer'
 import { IconButton } from '@mui/material'
 import {motion} from 'framer-motion'
+import { AuthContext } from './AuthProvider';
 
-const Navbar = ({data}) => {
+const Navbar = () => {
   const [open, setOpen] = useState(false);
-//   const { client, loading, data: { getPosts: posts } = {}, error } = useQuery(FETCHPOST, { fetchPolicy: "network-only" })
   const [post, setPost] = useState()
-  const [user, setUser] = useState(data)
-//   const { dispatch } = useContext(AuthContext)
+  const [user, setUser] = useState()
+  const { dispatch } = useContext(AuthContext)
 
   const [state, setState] = React.useState({
     top: false,
@@ -32,6 +32,15 @@ const Navbar = ({data}) => {
 
     setState({ ...state, [anchor]: open });
   };
+
+  if (typeof window !== 'undefined') {
+    // console.log('You are on the browser')
+    const user = JSON.parse(localStorage.getItem('user'))
+    // setUser(data)
+    console.log(user)
+    setUser(user)
+    // 👉️ can use localStorage here
+  } 
 
   const logout = async (e) => {
     dispatch({ type: "LOGOUT" })
@@ -49,17 +58,17 @@ const Navbar = ({data}) => {
         animate={{y:0}}
         className='flex w-[90%] mx-auto flex-row justify-between'>
           <div className='space-x-4 flex items-center'>
-            <Link href='/'><h1 className='text-white font-mono font-bold'>Blogg</h1></Link>
+            <Link href='/'><h1 className='text-white cursor-pointer font-mono font-bold'>Blogg</h1></Link>
             <div className='hidden md:block'>
               <Inputed className="hidden md:block" />
             </div>
 
           </div>
-          {user ? (
+          {/* {user ? (
             <div className='space-x-6 flex items-center'>
               <Link href="/create"> <span className='rounded-[50px]  cursor-pointer py-3 px-6 bg-[#3466f6] text-white'>Write</span></Link>
               <span className='text-white hidden md:block bg-[#171d24] py-3 px-3 md:px-6 rounded-md'>Hello {user.username}</span>
-              <span onClick={logout} className='text-white bg-[#3466f6]  hidden md:block cursor-pointer py-3 px-6 rounded-[50px]'>Logout</span>
+              <span onClick={logout} className='text-white bg-[#3466f6]   hidden md:block cursor-pointer py-3 px-6 rounded-[50px]'>Logout</span>
               <div className='block md:hidden'>
                 <IconButton onClick={toggleDrawer("left", true)} className='block md:hidden text-white'>
                   <MenuIcon className='text-white' />
@@ -70,17 +79,17 @@ const Navbar = ({data}) => {
           ) : (
             <div className='space-x-6 flex items-center'>
               <BasicModal />
-              <Link href='/register'><span className='text-white  hidden md:block bg-[#171d24] p-3 rounded-md'>Create Account</span></Link>
-              <Link href='/login'><span className='text-white hidden md:block  bg-[#171d24] py-3 px-6 rounded-md'>Login</span></Link>
+              <Link href='/register'><span className='text-white cursor-pointer  hidden md:block bg-[#171d24] p-3 rounded-md'>Create Account</span></Link>
+              <Link href='/login'><span className='text-white cursor-pointer hidden md:block  bg-[#171d24] py-3 px-6 rounded-md'>Login</span></Link>
               <div className='block md:hidden'>
                 <IconButton onClick={toggleDrawer("left", true)} className='block md:hidden text-white'>
-                  <MenuIcon className='text-white' />
+                  <MenuIcon className='text-white'/>
                 </IconButton>
               </div>
             </div>
-          )}
+          )} */}
         </motion.div>
-        <TemporaryDrawer toggleDrawer={toggleDrawer} state={state} setState={setState} />
+        <TemporaryDrawer toggleDrawer={toggleDrawer} state={state} setState={setState}/>     
       </nav>
     </>
   )
@@ -104,13 +113,13 @@ const FETCHPOST = gql`
   }
 `
 
-export async function getServerSideProps() {
-    // Fetch data from external API
+// export async function getServerSideProps() {
+//     Fetch data from external API
    
-    const data = localStorage.getItem('user')
-  
-    // Pass data to the page via props
-    return { props: { data } }
-  }
+//     const data = JSON.parse(localStorage.getItem('user'))
+//     console.log(data)
+//     Pass data to the page via props
+//     return { props: { data } }
+//   }
   
 export default Navbar;  

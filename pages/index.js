@@ -78,6 +78,10 @@ export const getServerSideProps = async () => {
     query: FETCHPOST
   })
 
+
+  
+  
+  // console.log(data)// const data = JSON.parse(localStorage.getItem('user'))
   if (error) {
     console.log(error.response)
   }
