@@ -33,15 +33,11 @@ const Navbar = () => {
     setState({ ...state, [anchor]: open });
   };
 
-  if (typeof window !== 'undefined') {
-    // console.log('You are on the browser')
-    const user = JSON.parse(localStorage.getItem('user'))
-    // setUser(data)
-    console.log(user)
-    setUser(user)
-    // 👉️ can use localStorage here
-  } 
-
+  useEffect(()=>{
+      const user = JSON.parse(localStorage.getItem('user'))
+      console.log(user)
+      setUser(user)
+  },[])
   const logout = async (e) => {
     dispatch({ type: "LOGOUT" })
     setUser(null)
@@ -51,22 +47,22 @@ const Navbar = () => {
   const handleClose = () => setOpen(false);
   return (
     <>
-      <nav className='bg-[#1F2937] p-2 emeke' >
+      <nav className='p-4' >
         <motion.div 
         initial={{y:"-100vh"}}
         transition={{type:"spring",stiffness:100}}
         animate={{y:0}}
         className='flex w-[90%] mx-auto flex-row justify-between'>
           <div className='space-x-4 flex items-center'>
-            <Link href='/'><h1 className='text-white cursor-pointer font-mono font-bold'>Blogg</h1></Link>
+            <Link href='/'><h1 className='text-white text-xl cursor-pointer font-mono font-bold'>Blogg</h1></Link>
             <div className='hidden md:block'>
               <Inputed className="hidden md:block" />
             </div>
 
           </div>
-          {/* {user ? (
+          {user ? (
             <div className='space-x-6 flex items-center'>
-              <Link href="/create"> <span className='rounded-[50px]  cursor-pointer py-3 px-6 bg-[#3466f6] text-white'>Write</span></Link>
+              {/* <Link href="/create"> <span className='rounded-[50px]  cursor-pointer py-3 px-6 bg-[#3466f6] text-white'>Write</span></Link> */}
               <span className='text-white hidden md:block bg-[#171d24] py-3 px-3 md:px-6 rounded-md'>Hello {user.username}</span>
               <span onClick={logout} className='text-white bg-[#3466f6]   hidden md:block cursor-pointer py-3 px-6 rounded-[50px]'>Logout</span>
               <div className='block md:hidden'>
@@ -87,9 +83,9 @@ const Navbar = () => {
                 </IconButton>
               </div>
             </div>
-          )} */}
+          )}
         </motion.div>
-        <TemporaryDrawer toggleDrawer={toggleDrawer} state={state} setState={setState}/>     
+        <TemporaryDrawer toggleDrawer={toggleDrawer} state={state} setState={setState}/> 
       </nav>
     </>
   )
@@ -113,13 +109,13 @@ const FETCHPOST = gql`
   }
 `
 
-// export async function getServerSideProps() {
-//     Fetch data from external API
+export async function getServerSideProps() {
+ 
    
-//     const data = JSON.parse(localStorage.getItem('user'))
-//     console.log(data)
-//     Pass data to the page via props
-//     return { props: { data } }
-//   }
+    const user = JSON.parse(localStorage.getItem('user'))
+    console.log(user)
+    // Pass data to the page via props
+    return { props: { user :'tehjeh' } }
+  }
   
 export default Navbar;  

@@ -16,7 +16,7 @@ const LikeButton = ({user,post:{id,likes},likePost}) => {
         if (user && likes.find((like) => like.username === user.username)) {
           setLiked(true);
         } else setLiked(false);
-      }, [user, likes]);
+      }, [user, likes]);  
 
 
 
@@ -35,7 +35,7 @@ const LikeButton = ({user,post:{id,likes},likePost}) => {
    
       );
   return (
-    <div onClick={likePost} className='flex items-center space-x-2' >
+    <div onClick={likePost} className='flex items-center space-x-2'>
         {likeButton}
        <p className='text-white'>{likes.length}</p> 
     </div>
